@@ -364,8 +364,12 @@ _bt_binsrch(Relation rel,
 	while (high > low)
 	{
 		OffsetNumber mid = low + ((high - low) / 2);
+		static int compareCalls = 0;
 
 		/* We have low <= mid < high, so mid points at a real slot */
+		
+		compareCalls++;
+		elog(NOTICE, "_bt_compare call %d", compareCalls);
 
 		result = _bt_compare(rel, keysz, scankey, page, mid);
 
@@ -374,6 +378,10 @@ _bt_binsrch(Relation rel,
 		else
 			high = mid;
 	}
+	
+
+
+
 
 	/*
 	 * At this point we have high == low, but be careful: they could point
